@@ -1,18 +1,31 @@
 require 'spec_helper'
 
 describe 'monit::default' do
-  let(:chef_run) { runner.converge 'monit::default' }
+  context 'default attributes' do
+    let(:chef_run) do
+      ChefSpec::SoloRunner.new.converge(described_recipe)
+    end
 
-  it "creates the monitrc" do
-    chef_run.should create_file_with_content "/etc/monit/monitrc", "set alert #{runner.node[:monit][:notify_email]}"
+    it 'creates the monitrc' do
+      expect(chef_run).to render_file('/etc/monit/monitrc')
+        .with_content("set alert #{chef_run.node[:monit][:notify_email]}")
+    end
 
-    @runner.node.default[:monit][:email_alerts?] = false
-    chef_run.should_not create_file_with_content "/etc/monit/monitrc", "set alert #{runner.node[:monit][:notify_email]}"
+    it 'creates directory /etc/monit/conf.d/' do
+      expect(chef_run).to create_directory '/etc/monit/conf.d/'
+    end
   end
 
-  it "creates directory /etc/monit/conf.d/" do
-    expect(chef_run).to create_directory '/etc/monit/conf.d/'
-  end
+  context 'email alerts disabled' do
+    let(:chef_run) do
+      ChefSpec::SoloRunner.new do |node|
+        node.normal[:monit][:email_alerts?] = false
+      end.converge(described_recipe)
+    end
 
+    it 'creates the monitrc' do
+      expect(chef_run).not_to render_file('/etc/monit/monitrc')
+        .with_content("set alert #{chef_run.node[:monit][:notify_email]}")
+    end
+  end
 end
-
