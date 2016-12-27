@@ -1,11 +1,13 @@
-{
-  "sha": "5d83f27199d12a655a7c28f669da8d7a5769fec5",
-  "sources": {
-    "monit": {
-      "path": "."
-    },
-    "yum": {
-      "locked_version": "2.2.0"
-    }
-  }
-}
+DEPENDENCIES
+  monit
+    path: .
+    metadata: true
+  monit_test
+    path: test/cookbooks/monit_test
+  yum
+
+GRAPH
+  monit (0.19.0)
+  monit_test (0.1.0)
+    monit (>= 0.0.0)
+  yum (4.1.0)
