@@ -32,6 +32,25 @@ describe 'monit_conf' do
     end
   end
 
+  context 'program' do
+    it 'matches by path' do
+      monit_conf['type'] = :program
+      monit_conf['path'] = '/path/to/my/program.sh'
+      monit_conf['timeout'] = '999 seconds'
+      expect(chef_run).to render_file('/etc/monit/conf.d/test.conf')
+        .with_content('check program test')
+        .with_content('with path /path/to/my/program.sh')
+        .with_content('with timeout 999 seconds')
+    end
+
+    it 'needs a path and a timeout' do
+      monit_conf['type'] = :program
+      expect(Chef::Log).to receive(:fatal)
+        .with(/program requires a path and a timeout attribute/)
+      chef_run
+    end
+  end
+
   context 'file' do
     it 'matches by path' do
       monit_conf['type'] = :file
