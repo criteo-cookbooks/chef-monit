@@ -15,8 +15,13 @@ action :create do
   if new_resource.type == :process && !(new_resource.pid || new_resource.regexp)
     Chef::Log.fatal("Type: #{new_resource.type.to_s} requires a pid attribute or a regexp expression.")
   end
+  if new_resource.type == :program && !new_resource.path || !new_resource.timeout
+    Chef::Log.fatal("Type: #{new_resource.type.to_s} requires a path and a timeout attribute.")
+  end
 
   withs = case new_resource.type
+          when :program
+            "with path #{new_resource.path} with timeout #{new_resource.timeout}"
           when :process
             new_resource.pid ? "with pidfile #{new_resource.pid}" : "with matching '#{new_resource.regexp}'"
           when :host

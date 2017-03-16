@@ -18,11 +18,11 @@ attribute :start_timeout, :kind_of => String
 attribute :stop, :kind_of => String
 attribute :stop_as, :kind_of => String
 attribute :template, :kind_of => String, :default => "conf.erb"
-attribute :type, :equal_to => [:file, :process, :filesystem, :host], :default => :process
+attribute :timeout,:kind_of => String, :default => '300 seconds'
+attribute :type, :equal_to => [:file, :process, :program, :filesystem, :host], :default => :process
 attribute :mode, :equal_to => [:active, :passive, :manual]
 
 def initialize(*args)
   super
   @action = :create
 end
-
