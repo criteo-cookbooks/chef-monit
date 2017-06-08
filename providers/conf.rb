@@ -51,7 +51,9 @@ action :create do
       :mode => new_resource.mode,
       :withs => withs
     )
-    notifies :restart, "service[monit]", new_resource.reload
+    if new_resource.reload
+      notifies :restart, "service[monit]", new_resource.reload 
+    end
   end
 end
 
@@ -63,6 +65,8 @@ action :delete do
     action :delete
     source new_resource.template
     cookbook new_resource.cookbook
-    notifies :restart, "service[monit]", new_resource.reload
+    if new_resource.reload
+      notifies :restart, "service[monit]", new_resource.reload
+    end
   end
 end
