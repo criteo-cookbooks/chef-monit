@@ -1,4 +1,4 @@
-default[:monit][:config_file] = '/etc/monit/monitrc'
+default[:monit][:config_file] = '/etc/monitrc'
 
 default[:monit][:email_alerts?]  = true
 default[:monit][:notify_email]   = 'root@localhost'
